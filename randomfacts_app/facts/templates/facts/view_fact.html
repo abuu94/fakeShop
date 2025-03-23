@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <meta http-equiv="refresh" content="120" /> -->
+
+    <title>Random Fact App</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f8f9fa;
+      }
+      .card {
+        margin-top: 50px;
+      }
+      .btn {
+        margin-right: 10px;
+      }
+      .comments-section {
+        margin-top: 30px;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        /* background-color: #333; */
+        padding: 10px;
+      }
+      nav ul li {
+        margin-right: 20px;
+      }
+      nav ul li a {
+        color: white;
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card text-center">
+        <div class="card-header bg-primary text-white">
+          <nav>
+            <ul>
+              <li><a href="{% url 'random_fact' %}">Home</a></li>
+              <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+            </ul>
+          </nav>
+        </div>
+        <!-- <div class="card-body">
+          <div class="d-flex justify-content-center my-3"></div>
+          <h1>Welcome to the Dashboard</h1>
+          <p>Here you can add dynamic content, charts, or summaries.</p>
+        </div> -->
+      </div>
+
+      <div class="card text-center">
+        <div class="card-header bg-primary text-white">
+          <h3>Random Fact</h3>
+        </div>
+        <div class="card-body">
+          <!-- <p id="fact-text" class="card-text fs-4">{{ fact.text }}</p> -->
+          <div class="d-flex justify-content-center my-3">
+            <div class="container mt-4">
+              <h2>Fun Fact Details</h2>
+              <p><strong>Fact:</strong> {{ fact.text }}</p>
+              <p><strong>Likes:</strong> {{ fact.likes }}</p>
+              <p><strong>Dislikes:</strong> {{ fact.dislikes }}</p>
+              <!-- <p><strong>Created At:</strong> {{ fact.created_at }}</p> -->
+              <a href="{% url 'dashboard' %}" class="btn btn-secondary"
+                >Back to List</a
+              >
+              <a href="{% url 'random_fact' %}" class="btn btn-secondary"
+                >Back to Home</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="comments-section mt-4">
+        <h4>Comments</h4>
+        <ul id="comments-list" class="list-group">
+          {% for comment in fact.comments.all %}
+          <li class="list-group-item">{{ comment.content }}</li>
+          <hr />
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Like button functionality
+      document.getElementById("like-btn").addEventListener("click", () => {
+        fetch(`{{ fact.id }}/like/`, { method: "POST" })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("likes").textContent = data.likes;
+          })
+          .catch((error) => console.error("Error linking the fact:", error));
+      });
+
+      // Dislike button functionality
+      document.getElementById("dislike-btn").addEventListener("click", () => {
+        fetch(`{{ fact.id }}/dislike/`, { method: "POST" })
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("dislikes").textContent = data.dislikes;
+          })
+          .catch((error) => console.error("Error disliking the fact: ", error));
+      });
+
+      // Comment submission functionality
+      document
+        .getElementById("comment-form")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+          const formData = new FormData(event.target);
+          fetch(`{{ fact.id }}/comment/`, {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              const commentsList = document.getElementById("comments-list");
+              commentsList.innerHTML = "";
+              data.comments.forEach((comment) => {
+                const li = document.createElement("li");
+                li.textContent = comment.content;
+                li.classList.add("list-group-item");
+                commentsList.appendChild(li);
+              });
+              event.target.reset();
+            });
+        });
+
+      // Get the CSRF token from the cookie
+      function getCSRFToken() {
+        const cookies = document.cookie.split(";");
+        for (let cookie of cookies) {
+          const [name, value] = cookie.trim().split("=");
+          if (name === "csrftoken") {
+            return value;
+          }
+        }
+        return null;
+      }
+
+      // Handle Like Button Click
+      document.getElementById("like-btn").addEventListener(
+        "click",
+        () => {
+          const csrftoken = getCSRFToken(); // Retrieve CSRF token
+          fetch(`{{ fact.id }}/like/`, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": csrftoken,
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Update the like button text dynamically
+              document.getElementById("likes").textContent = data.likes;
+            })
+            .catch((error) => console.error("Error liking the fact:", error));
+        },
+        { once: true }
+      );
+
+      // Handle Dislike Button Click
+      document.getElementById("dislike-btn").addEventListener(
+        "click",
+        () => {
+          const csrftoken = getCSRFToken(); // Retrieve CSRF token
+          fetch(`{{ fact.id }}/dislike/`, {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": csrftoken,
+              "Content-Type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              // Update the dislike button text dynamically
+              document.getElementById("dislikes").textContent = data.dislikes;
+            })
+            .catch((error) =>
+              console.error("Error disliking the fact:", error)
+            );
+        },
+        { once: true }
+      );
+    </script>
+    <script>
+      setTimeout(function () {
+        location.reload();
+      }, 60000); // 120000 milliseconds = 2 minutes
+    </script>
+  </body>
+</html>
