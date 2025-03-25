@@ -50,11 +50,6 @@
             </ul>
           </nav>
         </div>
-        <!-- <div class="card-body">
-          <div class="d-flex justify-content-center my-3"></div>
-          <h1>Welcome to the Dashboard</h1>
-          <p>Here you can add dynamic content, charts, or summaries.</p>
-        </div> -->
       </div>
 
       <div class="card text-center">
@@ -62,14 +57,13 @@
           <h3>Random Fact</h3>
         </div>
         <div class="card-body">
-          <!-- <p id="fact-text" class="card-text fs-4">{{ fact.text }}</p> -->
           <div class="d-flex justify-content-center my-3">
             <div class="container mt-4">
               <h2>Fun Fact Details</h2>
               <p><strong>Fact:</strong> {{ fact.text }}</p>
               <p><strong>Likes:</strong> {{ fact.likes }}</p>
               <p><strong>Dislikes:</strong> {{ fact.dislikes }}</p>
-              <!-- <p><strong>Created At:</strong> {{ fact.created_at }}</p> -->
+
               <a href="{% url 'dashboard' %}" class="btn btn-secondary"
                 >Back to List</a
               >
