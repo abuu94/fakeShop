@@ -20,6 +20,13 @@ export const getCartsByUserId = async (userId: number): Promise<Cart[]> => {
   return response;
 };
 
+// cart-service.ts
+// export const getCartsByUserId = async (userId: number) => {
+//   const res = await fetch(`https://fakestoreapi.com/carts/user/${userId}`);
+//   return res.json();
+// };
+
+
 // Create a new cart
 export const createCart = async (
   cart: Omit<Cart, "id" | "__v">

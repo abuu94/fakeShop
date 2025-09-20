@@ -15,8 +15,17 @@ import ProfilePage from "./pages/ProfilePage";
 import MyCartPage from "./pages/MyCartPAge";
 const queryClient = new QueryClient();
 
+const UserOnlyRoute = ({ children }: { children: ReactElement }) => {
+  const { user } = useAuth();
 
-// };
+  // Example: only allow user with ID 1 (admin) to access
+  if (user?.id !== 1) {
+    return <Navigate to="/dashboard/products" replace />;
+  }
+
+  return children;
+};
+
 const ProtectedRoute = ({
   children,
 }: {
@@ -42,14 +51,28 @@ const App: React.FC = () => {
                 </ProtectedRoute>
               }
             >
-              <Route path="/dashboard/users" element={<UserPage />} />
               <Route path="/dashboard/products" element={<ProductPage />} />
-              <Route path="/dashboard/carts" element={<CartsPage />} />
               <Route path="/dashboard/profile" element={<ProfilePage />} />
-              {/* <Route path="/dashboard/mycarts/:id" element={<MyCartPage />} /> */}
               <Route path="/dashboard/mycarts/" element={<MyCartPage />} />
+              <Route
+                path="users"
+                element={
+                  <UserOnlyRoute>
+                    <UserPage />
+                  </UserOnlyRoute>
+                }
+              />
+              <Route
+                path="carts"
+                element={
+                  <UserOnlyRoute>
+                    <CartsPage />
+                  </UserOnlyRoute>
+                }
+              />
               <Route path="*" element={<NoPage />} />
             </Route>
+
           </Routes>
         </BrowserRouter>
       </AuthProvider>

@@ -30,8 +30,16 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
 
 const UsersPage = () => {
+  const {user } = useAuth();
+
+  
+  if (!user || user.id !== 1) {
+    return <p className="p-4">Access denied. Admins only.</p>;
+
+  }
   const { data: users = [], isLoading, error } = useUsers();
   const { mutate: deleteUser } = useDeleteUser();
 

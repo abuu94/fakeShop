@@ -9,6 +9,18 @@ const instance = axios.create({
     'Content-Type': 'application/json',
   },
   // Optional: Add interceptors here for auth, logging, etc.
+
+  // Example interceptor for adding auth token
+  // instance.interceptors.request.use(config => {  
+  //   const token = getAuthTokenSomehow();
+  //   if (token) {
+  //     config.headers.Authorization = `Bearer ${token}`;
+  //   }
+  //   return config;
+  // }, error => {
+  //   return Promise.reject(error);
+  // });
+  
 });
 
 // Generic GET

@@ -5,6 +5,7 @@ import { getAllUsers,getUserById,createUser,updateUser,deleteUser,} from '../ser
 import type { User, UserType } from '../types/UserType';
 // import { useUser } from "./useUsers";
 import { useUserCarts1,useUserCarts2 } from "./useCartHook";
+import { useAuth } from '@/context/AuthContext';
 
 // Fetch all users
 export const useUsers = () => {
@@ -15,13 +16,21 @@ export const useUsers = () => {
 };
 
 // Fetch a single user by ID
-export const useUser = (id: number) => {
-  return useQuery<User>({
-    queryKey: ['user', id],
-    queryFn: () => getUserById(id),
-    enabled: !!id, // Prevent query if ID is undefined
+export const useUser = () => {
+  const {user} = useAuth();
+  return useQuery({
+    queryKey: ['user', user?.id],
+    queryFn: () => getUserById(user!.id),
+    enabled: !!user, // Prevent query if ID is undefined
   });
 };
+// export const useUser = (id: number) => {
+//   return useQuery<User>({
+//     queryKey: ['user', id],
+//     queryFn: () => getUserById(id),
+//     enabled: !!id, // Prevent query if ID is undefined
+//   });
+// };
 
 // Create a new user
 export const useCreateUser = () => {
