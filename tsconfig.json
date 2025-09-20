@@ -1,0 +1,41 @@
+// {
+//   "files": [],
+//   "references": [
+//     {
+//       "path": "./tsconfig.app.json"
+//     },
+//     {
+//       "path": "./tsconfig.node.json"
+//     }
+//   ],
+//   "compilerOptions": {
+//     "baseUrl": ".",
+//     "paths": {
+//       "@/*": ["./src/*"]
+//     }
+//   }
+// }
+
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "jsx": "react-jsx",                // Enables new JSX transform (React 17+)
+    "moduleResolution": "node",        // Resolves modules like Node.js
+    "esModuleInterop": true,           // Allows default imports from CommonJS
+    "allowSyntheticDefaultImports": true,
+    "lib": ["dom", "esnext"],          // Includes DOM and modern JS features
+    "types": ["react", "react-dom"]    // Ensures JSX and React types are available
+  }
+}
