@@ -38,6 +38,15 @@ npm install
 npm start
 ```
 
+## Users
+```
+Username:  johnd
+Password: m38rmF$
+
+Username: kevinryan
+Password: kev02937@
+```
+
 Make sure you have Node.js and npm installed.
 
 ## 🌐 API Reference
